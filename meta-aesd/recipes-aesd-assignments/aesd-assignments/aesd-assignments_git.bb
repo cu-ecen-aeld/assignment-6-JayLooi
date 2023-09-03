@@ -18,6 +18,10 @@ S = "${WORKDIR}/git/server"
 # See https://git.yoctoproject.org/poky/plain/meta/conf/bitbake.conf?h=kirkstone
 FILES:${PN} += "${bindir}/aesdsocket"
 
+inherit update-rc.d
+INITSCRIPT_PACKAGES = "${PN}"
+INITSCRIPT_PACKAGES:${PN} = "aesdsocket-start-stop"
+
 TARGET_LDFLAGS += "-pthread -lrt"
 
 do_configure () {
@@ -38,7 +42,7 @@ do_install () {
 	# See example at https://github.com/cu-ecen-aeld/ecen5013-yocto/blob/ecen5013-hello-world/meta-ecen5013/recipes-ecen5013/ecen5013-hello-world/ecen5013-hello-world_git.bb
 
 	install -d ${D}${bindir}
-	install -d ${D}/etc/init.d/
+	install -d ${D}${sysconfdir}/init.d
 	install -m 0755 ${S}/aesdsocket ${D}${bindir}/
-	install -m 0755 ${S}/aesdsocket-start-stop ${D}/etc/init.d/S99aesdsocket
+	install -m 0755 ${S}/aesdsocket-start-stop ${D}${sysconfdir}/init.d/S99aesdsocket
 }
